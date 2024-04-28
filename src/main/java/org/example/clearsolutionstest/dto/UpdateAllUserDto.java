@@ -1,13 +1,11 @@
 package org.example.clearsolutionstest.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+
 import java.time.LocalDate;
 
-public record UpdateUserDto(
-        @NotNull
-        Long id,
+public record UpdateAllUserDto(
         String firstName,
         String lastName,
         @Email

@@ -1,8 +1,15 @@
 package org.example.clearsolutionstest.dto;
 
+import java.time.LocalDate;
+
 public record ResponseUserDto(
-        String name,
-        String email
+        Long id,
+        String firstName,
+        String lastName,
+        LocalDate dateOfBirth,
+        String email,
+        String address,
+        String phoneNumber
 ) {
 
 }

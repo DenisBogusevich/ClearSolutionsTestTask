@@ -1,10 +1,7 @@
 package org.example.clearsolutionstest.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.clearsolutionstest.dto.RequestSearchByDateDto;
-import org.example.clearsolutionstest.dto.RequestUserDto;
-import org.example.clearsolutionstest.dto.ResponseUserDto;
-import org.example.clearsolutionstest.dto.UpdateUserDto;
+import org.example.clearsolutionstest.dto.*;
 import org.example.clearsolutionstest.mapper.UserMapper;
 import org.example.clearsolutionstest.model.User;
 import org.example.clearsolutionstest.repository.UserRepository;
@@ -29,16 +26,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseUserDto update(UpdateUserDto userUpdateRequest) {
+    public List<ResponseUserDto> update(List<UpdateUserDto> userUpdateRequests) {
 
-        return null;
+        return userUpdateRequests.stream()
+                .map(userUpdateRequest -> {
+                    User user = userRepository.findById(userUpdateRequest.id())
+                            .orElseThrow(() -> new RuntimeException("User not found with id: " + userUpdateRequest.id()));
+                    userMapper.updateUserFromDto(userUpdateRequest, user);
+                    User updatedUser = userRepository.save(user);
+                    return userMapper.toResponseUserDto(updatedUser);
+                })
+                .collect(Collectors.toList());
+
+
     }
 
+    @Override
+    public List<ResponseUserDto> updateAll(UpdateAllUserDto userUpdateRequest) {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            userMapper.updateUserFromDto(userUpdateRequest, user);
+            userRepository.save(user);
+        });
+        return users.stream()
+                .map(userMapper::toResponseUserDto)
+                .collect(Collectors.toList());
+
+
+    }
 
 
     @Override
     public List<ResponseUserDto> searchByBirthDateRange(RequestSearchByDateDto request) {
-       LocalDate startDate = request.StartDate();
+        LocalDate startDate = request.StartDate();
         LocalDate endDate = request.EndDate();
         List<User> users = userRepository.findByBirthDateBetween(startDate, endDate);
         return users.stream()
@@ -51,4 +71,6 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
 
     }
+
+
 }

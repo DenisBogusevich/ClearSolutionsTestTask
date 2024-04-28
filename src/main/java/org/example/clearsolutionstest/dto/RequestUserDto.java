@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import org.example.clearsolutionstest.annotation.minage.MinAge;
+
 import java.time.LocalDate;
 
 public record RequestUserDto(
@@ -11,11 +13,12 @@ public record RequestUserDto(
         String firstName,
         @NotEmpty
         String lastName,
-        @Email
-        String email,
         @Past
+        @MinAge
         @NotNull
         LocalDate dateOfBirth,
+        @Email
+        String email,
         String address,
         String phoneNumber
 ) {
