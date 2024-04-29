@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseUserDto register(
-            @RequestBody @Valid RequestUserDto userRegistrationRequest) throws RegistrationException {
+            @RequestBody @Valid RequestUserDto userRegistrationRequest) {
         return userService.register(userRegistrationRequest);
     }
 

@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = MinAgeValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MinAge {
-        String message() default "User is under the minimum age";
+        String message() default "User is under the minimum age of";
         Class<?>[] groups() default {};
         Class<? extends Payload>[] payload() default {};
 

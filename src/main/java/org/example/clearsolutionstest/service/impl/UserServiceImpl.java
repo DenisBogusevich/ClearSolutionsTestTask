@@ -2,6 +2,9 @@ package org.example.clearsolutionstest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.clearsolutionstest.dto.*;
+import org.example.clearsolutionstest.exception.DataRangeException;
+import org.example.clearsolutionstest.exception.RegistrationException;
+import org.example.clearsolutionstest.exception.UpdateException;
 import org.example.clearsolutionstest.mapper.UserMapper;
 import org.example.clearsolutionstest.model.User;
 import org.example.clearsolutionstest.repository.UserRepository;
@@ -19,14 +22,13 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public ResponseUserDto register(RequestUserDto userRegistrationRequest) {
+    public ResponseUserDto register(RequestUserDto userRegistrationRequest) throws RegistrationException {
         User user = userMapper.toUser(userRegistrationRequest);
-        System.out.println("user: " + user);
         return userMapper.toResponseUserDto(userRepository.save(user));
     }
 
     @Override
-    public List<ResponseUserDto> update(List<UpdateUserDto> userUpdateRequests) {
+    public List<ResponseUserDto> update(List<UpdateUserDto> userUpdateRequests) throws UpdateException {
 
         return userUpdateRequests.stream()
                 .map(userUpdateRequest -> {
@@ -42,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResponseUserDto> updateAll(UpdateAllUserDto userUpdateRequest) {
+    public List<ResponseUserDto> updateAll(UpdateAllUserDto userUpdateRequest) throws UpdateException{
         List<User> users = userRepository.findAll();
         users.forEach(user -> {
             userMapper.updateUserFromDto(userUpdateRequest, user);
@@ -55,9 +57,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
     @Override
-    public List<ResponseUserDto> searchByBirthDateRange(RequestSearchByDateDto request) {
+    public List<ResponseUserDto> searchByBirthDateRange(RequestSearchByDateDto request) throws DataRangeException {
         LocalDate startDate = request.StartDate();
         LocalDate endDate = request.EndDate();
         List<User> users = userRepository.findByBirthDateBetween(startDate, endDate);
